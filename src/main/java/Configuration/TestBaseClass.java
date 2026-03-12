@@ -28,7 +28,7 @@ public class TestBaseClass {
     @BeforeAll
     public static void RunningSettings() {
         main.SelectBrowser();
-        main.SetHeadlessMode("OFF");
+        main.SetHeadlessMode("ON");
         Configuration.timeout = 50000;
         Selenide.clearBrowserCookies();
         clearBrowserCache();
