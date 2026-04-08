@@ -1,15 +1,15 @@
 # 1. База Jenkins
 FROM jenkins/jenkins:lts
 
-# 2. Переходимо на root для встановлення пакетів
+# 2. Переходимо на root
 USER root
 
 # 3. Встановлюємо Maven та утиліти
 RUN apt-get update && \
-    apt-get install -y maven wget gnupg2 unzip curl software-properties-common lsb-release && \
+    apt-get install -y maven wget gnupg2 unzip curl lsb-release && \
     rm -rf /var/lib/apt/lists/*
 
-# 4. Встановлюємо Google Chrome (сучасний метод без apt-key)
+# 4. Встановлюємо Google Chrome (без apt-key)
 RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-linux-signing-key.gpg && \
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-key.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
     apt-get update && \
@@ -24,10 +24,10 @@ RUN apt-get update && \
 # 6. Повертаємося на користувача Jenkins
 USER jenkins
 
-# 7. Робоча директорія для проєкту
+# 7. Робоча директорія
 WORKDIR /app
 
-# 8. Копіюємо Maven проєкт і завантажуємо залежності
+# 8. Копіюємо Maven проект і завантажуємо залежності
 COPY pom.xml ./
 RUN mvn -q -DskipTests dependency:go-offline
 COPY src ./src
