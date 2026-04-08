@@ -4,14 +4,14 @@ FROM jenkins/jenkins:lts
 # 2. Переходимо на root для встановлення пакетів
 USER root
 
-# 3. Встановлюємо Maven
+# 3. Встановлюємо Maven та утиліти
 RUN apt-get update && \
-    apt-get install -y maven wget gnupg unzip curl && \
+    apt-get install -y maven wget gnupg2 unzip curl software-properties-common lsb-release && \
     rm -rf /var/lib/apt/lists/*
 
-# 4. Встановлюємо Chrome
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
+# 4. Встановлюємо Google Chrome (сучасний метод без apt-key)
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-linux-signing-key.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-key.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
     apt-get update && \
     apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
